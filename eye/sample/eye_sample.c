@@ -1,39 +1,17 @@
-#include "../eye.h"
-
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Shinpei Nakata");
-
-struct kernel_eye *eye;
-
-static int kp_pre_handler (struct kprobe *p, struct pt_regs *regs)
-{
-  keye_increment_counter(eye);
-
-  return 0;
-}
-
-static struct kprobe kp = {
-  .addr = 0xc0481815,
-  .pre_handler = kp_pre_handler,
-};
-
-
-static int init_eye_sample(void)
-{
-  eye = new_kerneleye();
-  //keye_write(eye, "hello world\n", sizeof("hello world\n"));
-  //  kp.addr = (kprobe_opcode_t *)kallsyms_lookup_name("sys_open");
-
-  register_kprobe(&kp);
-  return 0;
-}
-
-static void exit_eye_sample(void)
-{
-  printk("count:%d\n", keye_get_counter(eye));
-  free_kerneleye(eye);
-  unregister_kprobe(&kp);
-}
-			     
-module_init(init_eye_sample);
-module_exit(exit_eye_sample);
+#CFILES = kadvice_core.c
+#obj-m+=kadvice.o
+#obj-m+=kadvice_lsm.o
+#obj-m+=shinpei.o
+#obj-m+=advice_test2.o
+#obj-m+=advice_test1.o
+#obj-m+=kadvice_proc_write.o
+#obj-m+=advice_inode_permission.o
+#obj-m+=kadvice_io.o
+#obj-m+=kadvice_sample.o
+obj-m+=eye_sample.o
+#obj-m+=advice_iotest.o
+kadvice-objs := $(CFILES:.c=.o)
+all:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+clean:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
