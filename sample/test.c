@@ -6,7 +6,7 @@
 
 METHOD Kernel_keyeRead(Ctx* ctx, knh_sfp_t* sfp)
 {
-  char *str;
+  char *str,*str2;
   FILE *fp;
   fpos_t *pos;
   long size;
@@ -39,12 +39,28 @@ METHOD Kernel_keyeRead(Ctx* ctx, knh_sfp_t* sfp)
     size = KEYE_STR_MAX;
   }
   */
-  str = (char*)malloc(sizeof(char)*128);
-  
-  if(read(fileno(fp), str, 128) < 0){
+  str = (char*)malloc(sizeof(char)*128);  str2 = (char*)malloc(sizeof(char)*128);
+  memset(str,0,128);
+  memset(str, 0, 128);
+  size_t len = 0;
+  if((len = read(fileno(fp), str, 128)) < 0){
     fprintf(stderr,"read error\n");
     exit(1);
   }
+  //  fprintf(stderr, "len is %d\n", len);
+  //  str[len] = '\0';
+  int i;
+  for (i = 0 ; i < len; i++) fprintf(stderr, "%c", str[i]);
+  len = 0;
+  if((len = read(fileno(fp), str2, 128)) < 0){
+    fprintf(stderr,"read error\n");
+    exit(1);
+  }
+  fprintf(stderr, "len is %d\n", len);
+  str2[len] = '\0';
+
+  fprintf(stderr,"str is %s\n",str);
+  fprintf(stderr,"str2 is %s\n",str2);
 
   fclose(fp);
 

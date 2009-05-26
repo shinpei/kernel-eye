@@ -1,5 +1,5 @@
 using test.*;
-String modname = "probetest";
+String modname = "temp";
 
 String src = '''#include <linux/kernel.h>
 #include <linux/module.h>
@@ -38,4 +38,7 @@ MODULE_LICENSE("GPL");
 '''
   print "make start";
 Kernel.buildModule(modname,src);
-print "aa";
+Kernel.insmod("temp.ko")
+Kernel.rmmod("temp.ko")
+String s = Kernel.keyeRead()
+s
