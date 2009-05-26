@@ -1,0 +1,1 @@
+cmd_/home/igarashi/Development/kernel_dir/sample/sample.ko := ld -r -m elf_i386  --build-id -o /home/igarashi/Development/kernel_dir/sample/sample.ko /home/igarashi/Development/kernel_dir/sample/sample.o /home/igarashi/Development/kernel_dir/sample/sample.mod.o
