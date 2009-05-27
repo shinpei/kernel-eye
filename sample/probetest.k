@@ -41,4 +41,4 @@ Kernel.buildModule(modname,src);
 Kernel.insmod("temp.ko")
 Kernel.rmmod("temp.ko")
 String s = Kernel.keyeRead()
-s
+

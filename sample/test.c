@@ -6,62 +6,25 @@
 
 METHOD Kernel_keyeRead(Ctx* ctx, knh_sfp_t* sfp)
 {
-  char *str,*str2;
+  char *str;
   FILE *fp;
-  fpos_t *pos;
-  long size;
+  size_t len = 0; 
+  int i = 0;
 
-  if((fp = fopen("/sys/kernel/debug/keye0","r")) == NULL){
+  if((fp = fopen("/mnt/debugfs/keye0","r")) == NULL){
     fprintf(stderr,"Cannot open keye\n"); 
     exit(1);
   }
   
- 
-  /*  if(fseek(fp,0L,SEEK_END) != 0){
-    fprintf(stderr,"seek error\n");
-    exit(1);
-  }
-
-  if(fgetpos(fp,pos) != 0){
-    fpritnf(stderr,"get pos error\n");
-    exit(1);
-  }
-
-  if(fseek(fp,0L,SEEK_SET) != 0){
-    fprintf(stderr,"seek error\n");
-    exit(1);
-  }
-
-  size = (long)pos;
-  
-  if(size>KEYE_STR_MAX){
-    fprintf(stderr,"keye message is too long\n");
-    size = KEYE_STR_MAX;
-  }
-  */
-  str = (char*)malloc(sizeof(char)*128);  str2 = (char*)malloc(sizeof(char)*128);
+  str = (char*)malloc(sizeof(char)*128); 
   memset(str,0,128);
-  memset(str, 0, 128);
-  size_t len = 0;
+
   if((len = read(fileno(fp), str, 128)) < 0){
     fprintf(stderr,"read error\n");
     exit(1);
   }
-  //  fprintf(stderr, "len is %d\n", len);
-  //  str[len] = '\0';
-  int i;
+
   for (i = 0 ; i < len; i++) fprintf(stderr, "%c", str[i]);
-  len = 0;
-  if((len = read(fileno(fp), str2, 128)) < 0){
-    fprintf(stderr,"read error\n");
-    exit(1);
-  }
-  fprintf(stderr, "len is %d\n", len);
-  str2[len] = '\0';
-
-  fprintf(stderr,"str is %s\n",str);
-  fprintf(stderr,"str2 is %s\n",str2);
-
   fclose(fp);
 
   KNH_RETURN(ctx,sfp,new_String(ctx,B(str),NULL));
@@ -81,7 +44,7 @@ static char *TEMP_MAKEFILE_2 =
   "endif\n";
 
 /* not use */
-static char *TEMP_C =
+/*static char *TEMP_C =
   "#include <linux/init.h>\n"
   "#include <linux/module.h>\n"
   "MODULE_LICENSE(\"Dual BSD/GPL\");\n\n"
@@ -96,7 +59,7 @@ static char *TEMP_C =
   "}\n\n"
   "module_init(hello_init);\n"
   "module_exit(hello_exit);\n";
-
+*/
 
 /* void Kernel.buildModule(String modname, String source) */
 
